@@ -1,7 +1,7 @@
 import torch
 from preprocess import loadData, get_location, patch_data, set_seed
 import numpy as np
-from MS2GCAN import MS2GCAN
+from spikFormer import Spikformer
 from utils import train, test
 from sklearn import preprocessing
 
@@ -59,7 +59,7 @@ for seed_idx, seed in enumerate(seed_list):
     # 设置当前种子
     # set_seed(seed)
 
-    model = MS2GCAN(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
+    model = Spikformer(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
 
     if not test_only:
         train(train_data, train_label, batch_size, model, dataset_name, class_num, device, lr, epochs)

@@ -4,7 +4,7 @@ from utils import loss_fn, AA_fn, kappa_fn, confusion_matrix
 import numpy as np
 from tqdm import tqdm
 from sklearn import preprocessing
-from MS2GCAN import MS2GCAN
+from spikFormer import Spikformer
 import time
 from torch.utils.data import DataLoader
 
@@ -13,7 +13,7 @@ torch.cuda.set_device(device)
 
 seed_list = [0]
 dataset_list = ['PU', 'HU', 'WHLK']
-dataset_name = dataset_list[2] # 0'PU', 1'HU', 2'WHLK'
+dataset_name = dataset_list[0] # 0'PU', 1'HU', 2'WHLK'
 if dataset_name == 'PU':
     data_size = 19
     T = 3
@@ -70,7 +70,7 @@ for seed_idx, seed in enumerate(seed_list):
 
     train_loader_dynamic = DataLoader(train_dataset_full, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
-    model = MS2GCAN(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
+    model = Spikformer(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
 
     if not test_only:
         optimiser = torch.optim.Adam(model.parameters(),lr=lr)
