@@ -71,8 +71,8 @@ for seed_idx, seed in enumerate(seed_list):
 
     train_loader_dynamic = DataLoader(train_dataset_full, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
 
-    # model = Spikformer(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
-    model = MS2GCAN(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=True).to(device)
+    # model = Spikformer(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=False).to(device)
+    model = MS2GCAN(T=T, img_size=data_size, num_cls=class_num, input_dim=input_dim, hidden=hidden, gcn_layers=gcn_layers, K_hop=K_hop, use_cupy=False).to(device)
 
     if not test_only:
         optimiser = torch.optim.Adam(model.parameters(),lr=lr)
