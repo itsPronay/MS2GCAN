@@ -88,8 +88,8 @@ def loadData(Data):
                         class_numbers[item-1] += 1           
             class_numbers_train = [math.ceil(0.001 * class_numbers[i]) for i in range(class_num)]
         elif Data == 'PU_normal':
-            data = loadmat('./data/patch_data/PU/PaviaU.mat')['paviaU']
-            label = loadmat('./data/patch_data/PU/PaviaU_gt.mat')['paviaU_gt']
+            data = loadmat('PaviaU.mat')['paviaU']
+            label = loadmat('PaviaU_gt.mat')['paviaU_gt']
             class_num = 9
             class_numbers = [0 for i in range(int(class_num))]
             for items in list(label):
