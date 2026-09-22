@@ -25,13 +25,13 @@ from utils import AA_fn, kappa_fn, confusion_matrix, loss_fn
 
 # ── Device ─────────────────────────────────────────────────────────────────
 device = (
-    torch.device("cuda") if torch.cuda.is_available()
+    torch.device("cuda:0") if torch.cuda.is_available()
     else torch.device("mps")
     if (hasattr(torch.backends, "mps") and torch.backends.mps.is_available())
     else torch.device("cpu")
 )
 if device.type == "cuda":
-    torch.cuda.set_device(device)
+    torch.cuda.set_device(0)
 print(f"Using device: {device}")
 
 # ── Dataset selection ───────────────────────────────────────────────────────
