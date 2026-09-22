@@ -24,9 +24,15 @@ from preprocess import PatchDataset, get_location, loadData
 from utils import AA_fn, kappa_fn, confusion_matrix, loss_fn
 
 # ── Device ─────────────────────────────────────────────────────────────────
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = (
+    torch.device("cuda") if torch.cuda.is_available()
+    else torch.device("mps")
+    if (hasattr(torch.backends, "mps") and torch.backends.mps.is_available())
+    else torch.device("cpu")
+)
 if device.type == "cuda":
     torch.cuda.set_device(device)
+print(f"Using device: {device}")
 
 # ── Dataset selection ───────────────────────────────────────────────────────
 dataset_list = ["PU_normal", "PU", "HU", "WHLK"]
@@ -96,6 +102,8 @@ for seed_idx, seed in enumerate(seed_list):
     print(f"\n{'='*60}")
     print(f"Run {seed_idx + 1}/{len(seed_list)}  –  seed {seed}")
     print(f"{'='*60}")
+    torch.manual_seed(seed)
+    np.random.seed(seed)
 
     train_loader = DataLoader(
         train_dataset, batch_size=batch_size,
@@ -169,7 +177,7 @@ for seed_idx, seed in enumerate(seed_list):
     )
 
     ckpt = f"./best_{type(model).__name__}_{dataset_name}_weights.pth"
-    sd   = torch.load(ckpt, map_location=device)
+    sd   = torch.load(ckpt, map_location=device, weights_only=False)
     sd   = {k: v for k, v in sd.items()
             if "total_ops" not in k and "total_params" not in k}
     model.load_state_dict(sd, strict=False)
@@ -198,7 +206,8 @@ for seed_idx, seed in enumerate(seed_list):
     acc_class = corrects / totals
     AA        = acc_class.mean()
     kappa     = kappa_fn(outputs_np, labels_np)
-    cm        = confusion_matrix(labels_np, np.argmax(outputs_np, 1))
+    cm        = confusion_matrix(labels_np, np.argmax(outputs_np, 1),
+                                 labels=list(range(class_num)))
 
     precision = np.diag(cm) / (np.sum(cm, axis=0) + 1e-8)
     recall    = np.diag(cm) / (np.sum(cm, axis=1) + 1e-8)
