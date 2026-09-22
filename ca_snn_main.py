@@ -6,7 +6,12 @@ of MS2GCAN.  All dataset loading, preprocessing, and metric computation
 are unchanged.
 """
 
+import os
 import time
+
+# Ensure all relative paths (data files, checkpoints) resolve against the
+# directory that contains this script, regardless of where Python is launched.
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 import numpy as np
 import torch
